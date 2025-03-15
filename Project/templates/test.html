@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Your Assessment Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Skill Assessment Test</h1>
+            <div class="timer">
+                Time Remaining: <span id="timeRemaining">45:00</span>
+            </div>
+        </header>
+
+        <main>
+            <form id="testForm" method="post" action="/submit-test">
+                <section class="test-section">
+                    <h2>Multiple Choice Questions</h2>
+                    {% for i, question in enumerate(test.multiple_choice) %}
+                        <div class="question-card">
+                            <h3>Question {{ i+1 }}</h3>
+                            <p>{{ question.question }}</p>
+                            <div class="options">
+                                {% for option in question.options %}
+                                    <div class="option">
+                                        <input type="radio" id="q{{ i }}_{{ loop.index0 }}" name="q{{ i }}" value="{{ option }}" required>
+                                        <label for="q{{ i }}_{{ loop.index0 }}">{{ option }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </section>
+
+                {% if test.coding_challenges %}
+                <section class="test-section">
+                    <h2>Coding Challenge</h2>
+                    {% for challenge in test.coding_challenges %}
+                        <div class="coding-card">
+                            <h3>{{ challenge.skill.capitalize() }} Coding Challenge ({{ challenge.difficulty }})</h3>
+                            <p>{{ challenge.description }}</p>
+                            <div class="coding-area">
+                                <textarea name="code_solution" rows="10" placeholder="Write your code here..."></textarea>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn primary-btn">Submit Test</button>
+                </div>
+            </form>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 SkillTest Generator. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/test.js') }}"></script>
+</body>
+</html>
